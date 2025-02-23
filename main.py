@@ -1,5 +1,6 @@
 import pygame
 import math
+import random
 
 pygame.init()
 
@@ -57,12 +58,30 @@ class Entity:
     def __init__(self, x, y, hp=20):
         self.x = x
         self.y = y
-        self.speed = 3
+        self.speed = 2
         self.hp = hp
+        self.max_hp = hp
+    
+    def move(self):
+        if player.x <= self.x:
+            self.x -= self.speed
+        if player.x > self.x:
+            self.x += self.speed
+        if player.y <= self.y:
+            self.y -= self.speed
+        if player.y > self.y:
+            self.y += self.speed
+
+    def take_damage(self, damage):
+        self.hp -= damage
+        if self.hp <= 0:
+            print("Im dead!!!")
         
     def draw(self, screen):
         screen.blit(entity_img, (self.x, self.y))
-
+        # Healthbar
+        pygame.draw.rect(screen, (255, 0, 0), (self.x, self.y - 10, 32, 5))  # Background Bar
+        pygame.draw.rect(screen, (0, 255, 0), (self.x, self.y - 10, max(0, 32 * (self.hp / self.max_hp)), 5)) # HP Bar
 
 class Bullet:
     def __init__(self, x, y, target_x, target_y):
@@ -84,13 +103,25 @@ class Bullet:
     def move(self):
         self.x += self.dx
         self.y += self.dy
+    
+    def collides_with(self, entity):
+        # Checks if it collides with anyone
+        bullet_rect = pygame.Rect(self.x, self.y, 10, 10)
+        entity_rect = pygame.Rect(entity.x, entity.y, TILE_SIZE, TILE_SIZE)
+        return bullet_rect.colliderect(entity_rect)
 
     def draw(self, screen):
         screen.blit(fireball_img, (int(self.x), int(self.y)))
 
 # Player init
 player = Player(WIDTH // 2, HEIGHT // 2)
+
+# entity init
 entity = Entity(600, 400)
+# spawn entity
+def SpawnEntity():
+    entity = Entity(random.randint(0, 800), random.randint(0, 600))
+    return entity
 
 # Game loop
 running = True
@@ -111,14 +142,28 @@ while running:
     keys = pygame.key.get_pressed()
     player.move(keys)
 
+    # Entity movement
+    entity.move()
+
     # Update bullets
-    for bullet in player.bullets:
+    for bullet in player.bullets[:]:  # iterate over copy of a list
         bullet.move()
+        if entity:
+            if bullet.collides_with(entity):
+                entity.take_damage(5)  # do 5 dmg
+                player.bullets.remove(bullet)
     
+    # delete if killed
+    if entity and entity.hp <= 0:
+        entity = None
+        # new one spawns
+        entity = SpawnEntity()
+
     # Drawing
     screen.fill(WHITE)
     player.draw(screen)
-    entity.draw(screen)
+    if entity:
+        entity.draw(screen)
     pygame.display.flip()
 
 pygame.quit()
