@@ -2,14 +2,20 @@ import pygame
 from settings import TILE_SIZE
 from assets import entity_img
 import math
+import time
 
 class Entity:
-    def __init__(self, x, y, hp=20):
+    def __init__(self, x, y, hp=20, dmg=5):
         self.x = x
         self.y = y
         self.speed = 2
         self.hp = hp
         self.max_hp = hp
+        self.dmg = dmg
+
+        self.last_attack_time = 0
+        self.attack_cooldown = 1
+
     
     def move(self, player):
         # position difference to player
@@ -31,6 +37,12 @@ class Entity:
             # if very close set to player x and y
             self.x = player.x
             self.y = player.y
+
+            # make player take dmg every 1 sec
+            current_time = time.time()
+            if current_time - self.last_attack_time >= self.attack_cooldown:
+                player.take_dmg(self.dmg)  # deal damage to the player
+                self.last_attack_time = current_time
 
     def take_damage(self, damage):
         self.hp -= damage

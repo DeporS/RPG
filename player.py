@@ -42,3 +42,6 @@ class Player:
         screen.blit(player_img, (self.x, self.y))
         for bullet in self.bullets:
             bullet.draw(screen)
+    
+    def take_dmg(self, dmg):
+        self.hp -= dmg
