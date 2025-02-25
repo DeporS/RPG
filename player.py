@@ -35,7 +35,7 @@ class Player:
         self.y += dy
     
     def shoot(self, target_x, target_y):
-        bullet = Bullet(self.x + TILE_SIZE // 2, self.y + TILE_SIZE // 2, target_x, target_y)
+        bullet = Bullet(self.x + TILE_SIZE // 4, self.y + TILE_SIZE // 4, target_x, target_y)
         self.bullets.append(bullet)
 
     def draw(self, screen):

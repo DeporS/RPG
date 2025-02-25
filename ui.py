@@ -1,6 +1,6 @@
 import pygame
-from settings import HEALTHBAR_HEIGHT, HEALTHBAR_WIDTH
-from assets import healthbar_bg, healthbar_fill
+from settings import HEALTHBAR_HEIGHT, HEALTHBAR_WIDTH, WHITE
+from assets import healthbar_bg, healthbar_fill, font
 
 def draw_health_bar(screen, health, max_health):
     """Draws healthbar left down corner"""
@@ -15,3 +15,12 @@ def draw_health_bar(screen, health, max_health):
 
     # draw fill
     screen.blit(healthbar_fill, (x, y), (0, 0, filled_width, HEALTHBAR_HEIGHT))
+
+    # Render health values ex: "70/100"
+    hp_text = f"{health} / {max_health}"
+    text_surface = font.render(hp_text, True, WHITE) 
+    text_x = x + HEALTHBAR_WIDTH // 2 - text_surface.get_width() // 2  # Center
+    text_y = y + HEALTHBAR_HEIGHT // 2 - text_surface.get_height() // 2
+
+    # Draw HP values
+    screen.blit(text_surface, (text_x, text_y))

@@ -19,7 +19,7 @@ class Entity:
         # direction vector length
         length = math.sqrt(dx ** 2 + dy ** 2)
 
-        if length != 0:
+        if length > self.speed: # move only if distance is greater than speed
             # change length to unit vector (1)
             dx = (dx / length) * self.speed
             dy = (dy / length) * self.speed
@@ -27,6 +27,10 @@ class Entity:
             # update position
             self.x += dx
             self.y += dy
+        else:
+            # if very close set to player x and y
+            self.x = player.x
+            self.y = player.y
 
     def take_damage(self, damage):
         self.hp -= damage

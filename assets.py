@@ -17,3 +17,8 @@ healthbar_bg = pygame.image.load("Assets/healthbar_bg.png")
 healthbar_fill = pygame.image.load("Assets/healthbar_fill.png")
 healthbar_bg = pygame.transform.scale(healthbar_bg, (HEALTHBAR_WIDTH, HEALTHBAR_HEIGHT))
 healthbar_fill = pygame.transform.scale(healthbar_fill, (HEALTHBAR_WIDTH, HEALTHBAR_HEIGHT))
+
+
+# Fonts
+pygame.font.init()
+font = pygame.font.Font(None, 24)
