@@ -1,0 +1,32 @@
+import pygame
+from settings import TILE_SIZE
+from assets import entity_img
+
+class Entity:
+    def __init__(self, x, y, hp=20):
+        self.x = x
+        self.y = y
+        self.speed = 2
+        self.hp = hp
+        self.max_hp = hp
+    
+    def move(self, player):
+        if player.x <= self.x:
+            self.x -= self.speed
+        if player.x > self.x:
+            self.x += self.speed
+        if player.y <= self.y:
+            self.y -= self.speed
+        if player.y > self.y:
+            self.y += self.speed
+
+    def take_damage(self, damage):
+        self.hp -= damage
+        if self.hp <= 0:
+            print("Im dead!!!")
+        
+    def draw(self, screen):
+        screen.blit(entity_img, (self.x, self.y))
+        # Healthbar
+        pygame.draw.rect(screen, (255, 0, 0), (self.x, self.y - 10, TILE_SIZE, 5))  # Background Bar
+        pygame.draw.rect(screen, (0, 255, 0), (self.x, self.y - 10, max(0, TILE_SIZE * (self.hp / self.max_hp)), 5)) # HP Bar
