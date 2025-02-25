@@ -1,6 +1,7 @@
 import pygame
 from settings import TILE_SIZE
 from assets import entity_img
+import math
 
 class Entity:
     def __init__(self, x, y, hp=20):
@@ -11,14 +12,21 @@ class Entity:
         self.max_hp = hp
     
     def move(self, player):
-        if player.x <= self.x:
-            self.x -= self.speed
-        if player.x > self.x:
-            self.x += self.speed
-        if player.y <= self.y:
-            self.y -= self.speed
-        if player.y > self.y:
-            self.y += self.speed
+        # position difference to player
+        dx = player.x - self.x
+        dy = player.y - self.y
+
+        # direction vector length
+        length = math.sqrt(dx ** 2 + dy ** 2)
+
+        if length != 0:
+            # change length to vector 
+            dx = (dx / length) * self.speed
+            dy = (dy / length) * self.speed
+
+            # update position
+            self.x += dx
+            self.y += dy
 
     def take_damage(self, damage):
         self.hp -= damage

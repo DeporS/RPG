@@ -14,32 +14,32 @@ clock = pygame.time.Clock()
 while running:
     clock.tick(FPS)
 
-    # Obsługa zdarzeń
+    # Events 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
         if event.type == pygame.MOUSEBUTTONDOWN and event.button == 1:
             player.shoot(*pygame.mouse.get_pos())
 
-    # Ruch gracza
+    # Player movement
     keys = pygame.key.get_pressed()
     player.move(keys)
 
-    # Ruch wroga
+    # Entity movement
     entity.move(player)
 
-    # Ruch pocisków i kolizje
+    # Bullets
     for bullet in player.bullets[:]:
         bullet.move()
         if bullet.collides_with(entity):
             entity.take_damage(5)
             player.bullets.remove(bullet)
 
-    # Spawn nowego przeciwnika, jeśli poprzedni zginął
+    # Spawn new entity
     if entity.hp <= 0:
         entity = SpawnEntity()
 
-    # Rysowanie elementów
+    # Drawing
     screen.fill(WHITE)
     player.draw(screen)
     entity.draw(screen)
