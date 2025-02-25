@@ -5,15 +5,16 @@ from assets import player_img
 import math
 
 class Player:
-    def __init__(self, x, y):
+    def __init__(self, x, y, hp=100):
         self.x = x
         self.y = y
         self.speed = 4
         self.bullets = []
-        self.hp = 100
+        self.hp = hp
+        self.max_hp = hp
 
     def move(self, keys):
-        diagonal_speed = self.speed / math.sqrt(2)  # Prawidłowa redukcja prędkości po ukosie
+        diagonal_speed = self.speed / math.sqrt(2)  # diagonal run
 
         dx, dy = 0, 0
         if keys[pygame.K_a]:
@@ -25,7 +26,7 @@ class Player:
         if keys[pygame.K_s]:
             dy += self.speed
 
-        # Jeśli poruszamy się w dwóch kierunkach, normalizujemy prędkość
+        #  while holding two keys
         if dx != 0 and dy != 0:
             dx *= diagonal_speed / self.speed
             dy *= diagonal_speed / self.speed

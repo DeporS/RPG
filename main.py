@@ -3,6 +3,7 @@ from settings import FPS, WHITE, screen
 from player import Player
 from entity import Entity
 from utils import SpawnEntity
+from ui import draw_health_bar
 
 pygame.init()
 
@@ -43,6 +44,9 @@ while running:
     screen.fill(WHITE)
     player.draw(screen)
     entity.draw(screen)
+
+    # Player healthbar
+    draw_health_bar(screen, player.hp, player.max_hp)
 
     pygame.display.flip()
 
