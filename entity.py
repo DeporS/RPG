@@ -20,7 +20,7 @@ class Entity:
         length = math.sqrt(dx ** 2 + dy ** 2)
 
         if length != 0:
-            # change length to vector 
+            # change length to unit vector (1)
             dx = (dx / length) * self.speed
             dy = (dy / length) * self.speed
 
