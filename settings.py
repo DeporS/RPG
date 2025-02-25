@@ -12,6 +12,8 @@ HEALTHBAR_HEIGHT = 32
 
 # Colors
 WHITE = (255, 255, 255)
+RED = (255, 0, 0)
+BLACK = (0, 0, 0)
 
 # Window
 screen = pygame.display.set_mode((WIDTH, HEIGHT))

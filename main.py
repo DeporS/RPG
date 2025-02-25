@@ -36,6 +36,13 @@ while running:
             entity.take_damage(5)
             player.bullets.remove(bullet)
 
+    # Player dmg texts
+    for text in player.damage_texts[:]:
+        text.update()  # Update the floating text
+        text.draw(screen)
+        if text.alpha == 0:  # Remove the text when it's fully faded
+            player.damage_texts.remove(text)
+
     # Spawn new entity
     if entity.hp <= 0:
         entity = SpawnEntity()
