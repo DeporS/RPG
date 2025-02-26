@@ -33,7 +33,7 @@ while running:
     for bullet in player.bullets[:]:
         bullet.move()
         if bullet.collides_with(entity):
-            entity.take_damage(player.damage)
+            entity.take_damage(player.damage, player.crit_chance)
             player.bullets.remove(bullet)
 
     # Spawn new entity

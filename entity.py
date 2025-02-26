@@ -1,3 +1,4 @@
+import random
 import pygame
 from settings import TILE_SIZE
 from assets import entity_img
@@ -48,11 +49,14 @@ class Entity:
                 player.take_dmg(self.dmg)  # deal damage to the player
                 self.last_attack_time = current_time
 
-    def take_damage(self, damage):
+    def take_damage(self, damage, crit_chance):
         self.hp -= damage
         if self.hp <= 0:
             print("Im dead!!!")
-        damage_text = DamageText(self.x, self.y, damage, "Mob")
+        if crit_chance * 100 >= random.randint(0, 100):
+            damage_text = DamageText(self.x, self.y, damage * 2, "Mob", True)
+        else:
+            damage_text = DamageText(self.x, self.y, damage, "Mob")
         all_damage_texts.append(damage_text)
         
     def draw(self, screen):

@@ -13,6 +13,7 @@ class Player:
         self.speed = 4
         self.bullets = []
         self.damage = 5
+        self.crit_chance = 0.05
         self.hp = hp
         self.max_hp = hp
         self.damage_texts = []
