@@ -11,5 +11,8 @@ class NameText:
         self.text = self.font.render(nickname + " lvl. " + str(lvl), True, BLACK)
         self.text_rect = self.text.get_rect(center=(x, y))
     
+    def update_position(self, x, y):
+        self.text_rect.center = (int(x), int(y))
+    
     def draw(self, screen):
         screen.blit(self.text, self.text_rect)

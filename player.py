@@ -47,9 +47,7 @@ class Player:
         self.y += dy
 
         # Update name position when player moves
-        self.name_text.x = self.x + TILE_SIZE // 2
-        self.name_text.y = self.y - 10
-        self.name_text.text_rect.center = (self.name_text.x, self.name_text.y)
+        self.name_text.update_position(self.x + TILE_SIZE // 2, self.y - 10)
     
     def shoot(self, target_x, target_y):
         bullet = Bullet(self.x + TILE_SIZE // 4, self.y + TILE_SIZE // 4, target_x, target_y)
