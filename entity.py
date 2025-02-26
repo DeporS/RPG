@@ -51,6 +51,9 @@ class Entity:
             self.x = player.x
             self.y = player.y
 
+        # Deal damage to player when within x radius
+        x = 10
+        if abs(self.x - player.x) < x and abs(self.y - player.y) < x:
             # make player take dmg every 1 sec
             current_time = time.time()
             if current_time - self.last_attack_time >= self.attack_cooldown:
