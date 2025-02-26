@@ -1,10 +1,10 @@
 import pygame
-from settings import HEALTHBAR_HEIGHT, HEALTHBAR_WIDTH, WHITE
+from settings import HEALTHBAR_HEIGHT, HEALTHBAR_WIDTH, WHITE, HEALTHBARPOS_X
 from assets import healthbar_bg, healthbar_fill, font
 
 def draw_health_bar(screen, health, max_health):
-    """Draws healthbar left down corner"""
-    x = 10  # left position
+    """Draws healthbar"""
+    x =  HEALTHBARPOS_X # X position
     y = screen.get_height() - HEALTHBAR_HEIGHT - 10  # down position
 
     health_ratio = health / max_health

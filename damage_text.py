@@ -1,14 +1,23 @@
 import pygame
-from settings import RED, WHITE
+from settings import RED, WHITE, BLACK, ORANGE
 
 class DamageText:
-    def __init__(self, x, y, damage, who="Player"):
+    def __init__(self, x, y, damage, who="Player", critical_hit=False):
         self.x = x
         self.y = y
         self.damage = damage
         self.alpha = 255  # Opacity (starts fully visible)
-        self.font = pygame.font.SysFont("None", 50)
-        self.text = self.font.render('-' + str(damage), True, RED)
+        if who == "Player":
+            self.font = pygame.font.SysFont("None", 50)
+        else:
+            self.font = pygame.font.SysFont("None", 15)
+        if who == "Player":
+            self.text = self.font.render('-' + str(damage), True, RED)
+        else:
+            if critical_hit:
+                self.text = self.font.render('-' + str(damage), True, RED)
+            else:
+                self.text = self.font.render('-' + str(damage), True, ORANGE)
         self.text_rect = self.text.get_rect(center=(x, y))
         self.life_time = 60  # Time in frames for how long the damage text will float (about 1 second)
 

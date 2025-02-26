@@ -1,19 +1,28 @@
 import pygame
 from bullet import Bullet
 from damage_text import DamageText
-from settings import TILE_SIZE, HEALTHBAR_HEIGHT, HEALTHBAR_WIDTH, HEIGHT
+from settings import TILE_SIZE, HEALTHBAR_HEIGHT, HEALTHBAR_WIDTH, HEIGHT, HEALTHBARPOS_X
 from assets import player_img
+from name_text import NameText
 import math
 
 class Player:
-    def __init__(self, x, y, hp=100):
+    def __init__(self, x, y, hp=100, nickname="Newbie"):
         self.x = x
         self.y = y
         self.speed = 4
         self.bullets = []
+        self.damage = 5
         self.hp = hp
         self.max_hp = hp
         self.damage_texts = []
+        self.lvl = 1
+        self.xp = 0
+        self.max_xp = 10
+        self.nickname = nickname
+
+        # Nickname
+        self.name_text = NameText(self.x + TILE_SIZE // 2, self.y - 10, self.nickname, self.lvl)
 
     def move(self, keys):
         diagonal_speed = self.speed / math.sqrt(2)  # diagonal run
@@ -35,6 +44,11 @@ class Player:
 
         self.x += dx
         self.y += dy
+
+        # Update name position when player moves
+        self.name_text.x = self.x + TILE_SIZE // 2
+        self.name_text.y = self.y - 10
+        self.name_text.text_rect.center = (self.name_text.x, self.name_text.y)
     
     def shoot(self, target_x, target_y):
         bullet = Bullet(self.x + TILE_SIZE // 4, self.y + TILE_SIZE // 4, target_x, target_y)
@@ -43,12 +57,16 @@ class Player:
     def take_dmg(self, dmg):
         self.hp -= dmg
         # Create damage text and add it to the list
-        damage_text = DamageText(30 + HEALTHBAR_WIDTH, HEIGHT - 10 - HEALTHBAR_HEIGHT // 2, dmg)
+        damage_text = DamageText(HEALTHBARPOS_X + HEALTHBAR_WIDTH + 20, HEIGHT - 10 - HEALTHBAR_HEIGHT // 2, dmg)
         self.damage_texts.append(damage_text)
 
     def draw(self, screen):
         # Draw Player
         screen.blit(player_img, (self.x, self.y))
+
+        # Draw NameText above the player
+        self.name_text.draw(screen)
+
         # Draw player bullets
         for bullet in self.bullets:
             bullet.draw(screen)

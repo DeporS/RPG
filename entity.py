@@ -1,8 +1,12 @@
 import pygame
 from settings import TILE_SIZE
 from assets import entity_img
+from damage_text import DamageText
 import math
 import time
+
+# damage texts
+all_damage_texts = []
 
 class Entity:
     def __init__(self, x, y, hp=20, dmg=5):
@@ -48,9 +52,13 @@ class Entity:
         self.hp -= damage
         if self.hp <= 0:
             print("Im dead!!!")
+        damage_text = DamageText(self.x, self.y, damage, "Mob")
+        all_damage_texts.append(damage_text)
         
     def draw(self, screen):
+        # Draw mob
         screen.blit(entity_img, (self.x, self.y))
-        # Healthbar
+        # Draw healthbar
         pygame.draw.rect(screen, (255, 0, 0), (self.x, self.y - 10, TILE_SIZE, 5))  # Background Bar
         pygame.draw.rect(screen, (0, 255, 0), (self.x, self.y - 10, max(0, TILE_SIZE * (self.hp / self.max_hp)), 5)) # HP Bar
+        

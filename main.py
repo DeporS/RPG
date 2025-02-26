@@ -1,7 +1,7 @@
 import pygame
 from settings import FPS, WHITE, screen
 from player import Player
-from entity import Entity
+from entity import Entity, all_damage_texts
 from utils import SpawnEntity
 from ui import draw_health_bar
 
@@ -33,27 +33,27 @@ while running:
     for bullet in player.bullets[:]:
         bullet.move()
         if bullet.collides_with(entity):
-            entity.take_damage(5)
+            entity.take_damage(player.damage)
             player.bullets.remove(bullet)
-
-    # Player dmg texts
-    for text in player.damage_texts[:]:
-        text.update()  # Update the floating text
-        text.draw(screen)
-        if text.alpha == 0:  # Remove the text when it's fully faded
-            player.damage_texts.remove(text)
 
     # Spawn new entity
     if entity.hp <= 0:
         entity = SpawnEntity()
 
-    # Drawing
+    # Drawing   
     screen.fill(WHITE)
     player.draw(screen)
     entity.draw(screen)
 
     # Player healthbar
     draw_health_bar(screen, player.hp, player.max_hp)
+
+    # Mobs take damage texts
+    for text in all_damage_texts[:]:
+        text.update()  # Update the floating text
+        text.draw(screen)
+        if text.alpha == 0:  # Remove the text when its faded
+            all_damage_texts.remove(text)
 
     pygame.display.flip()
 
