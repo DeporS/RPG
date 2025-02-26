@@ -59,8 +59,8 @@ while running:
         # Follow player
         mob.move(player)
 
-        # Deleting and respawning dead mobs
-        update_mobs(5)
+    # Deleting and respawning dead mobs
+    update_mobs(5)
         
 
     # Bullets
@@ -69,7 +69,8 @@ while running:
         for mob in mobs:
             if bullet.collides_with(mob):
                 mob.take_damage(player.damage, player.crit_chance)
-                player.bullets.remove(bullet)
+                if bullet in player.bullets:
+                    player.bullets.remove(bullet)
 
     
 
