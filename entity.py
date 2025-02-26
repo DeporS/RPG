@@ -14,6 +14,8 @@ class Entity:
     def __init__(self, x, y, hp=20, dmg=5, name="Goblin", lvl=1):
         self.x = x
         self.y = y
+        self.starting_x = x
+        self.starting_y = y
         self.speed = 2
         self.hp = hp
         self.max_hp = hp

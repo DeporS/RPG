@@ -2,20 +2,48 @@ import pygame
 from settings import FPS, WHITE, screen
 from player import Player
 from entity import Entity, all_damage_texts
+from goblin import Goblin
 from utils import SpawnEntity
 from ui import draw_health_bar
 
 pygame.init()
 
 player = Player(400, 300)
-entity = Entity(600, 400)
+
+mobs = [
+    Goblin(100, 100),
+    Goblin(500, 100),
+    Goblin(500, 500),
+    Goblin(100, 500)
+]
+
+dead_mobs = [] # List of dead mobs needed for respawning
+
+def update_mobs(respawn_time):
+    '''Function for updating mobs'''
+    global mobs, dead_mobs
+    current_time = pygame.time.get_ticks()
+
+    # Actions with dead mobs
+    for mob in mobs[:]:
+        if mob.hp <= 0:
+            dead_mobs.append((type(mob), mob.starting_x, mob.starting_y, current_time)) # Save respawn position and dead time
+            mobs.remove(mob) # Remove from alive mobs
+    
+    # Respawning dead mobs after {respawn_time} seconds
+    for mob_type, x, y, t in dead_mobs[:]:
+        if current_time - t >= respawn_time * 1000:
+            mobs.append(mob_type(x, y))
+            dead_mobs.remove((mob_type, x, y, t))
+
+
 running = True
 clock = pygame.time.Clock()
 
 while running:
     clock.tick(FPS)
 
-    # Events 
+    # Events a
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             running = False
@@ -26,24 +54,30 @@ while running:
     keys = pygame.key.get_pressed()
     player.move(keys)
 
-    # Entity movement
-    entity.move(player)
+    # All mobs
+    for mob in mobs:
+        # Follow player
+        mob.move(player)
+
+        # Deleting and respawning dead mobs
+        update_mobs(5)
+        
 
     # Bullets
     for bullet in player.bullets[:]:
         bullet.move()
-        if bullet.collides_with(entity):
-            entity.take_damage(player.damage, player.crit_chance)
-            player.bullets.remove(bullet)
+        for mob in mobs:
+            if bullet.collides_with(mob):
+                mob.take_damage(player.damage, player.crit_chance)
+                player.bullets.remove(bullet)
 
-    # Spawn new entity
-    if entity.hp <= 0:
-        entity = SpawnEntity()
+    
 
     # Drawing   
     screen.fill(WHITE)
     player.draw(screen)
-    entity.draw(screen)
+    for mob in mobs:
+        mob.draw(screen)
 
     # Player healthbar
     draw_health_bar(screen, player.hp, player.max_hp)
