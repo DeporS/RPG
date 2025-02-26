@@ -15,6 +15,7 @@ class DamageText:
             self.text = self.font.render('-' + str(damage), True, RED)
         else:
             if critical_hit:
+                self.font = pygame.font.SysFont("None", 25)
                 self.text = self.font.render('-' + str(damage), True, RED)
             else:
                 self.text = self.font.render('-' + str(damage), True, ORANGE)

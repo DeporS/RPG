@@ -60,11 +60,11 @@ class Entity:
 
     def take_damage(self, damage, crit_chance):
         # Take damage when attacked by player
-        self.hp -= damage
-
         if crit_chance * 100 >= random.randint(0, 100):
             damage_text = DamageText(self.x, self.y, damage * 2, "Mob", True)
+            self.hp -= damage * 2
         else:
+            self.hp -= damage
             damage_text = DamageText(self.x, self.y, damage, "Mob")
         all_damage_texts.append(damage_text)
         
