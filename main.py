@@ -4,6 +4,8 @@ from player import Player
 from entity import Entity, all_damage_texts
 from goblin import Goblin
 from ui import draw_health_bar
+from coins import Coins
+import random
 
 pygame.init()
 
@@ -17,6 +19,7 @@ mobs = [
 ]
 
 dead_mobs = [] # List of dead mobs needed for respawning
+dropped_coins = [] # List of dropped coins from dead mobs
 
 def update_mobs(respawn_time):
     '''Function for updating mobs'''
@@ -28,6 +31,10 @@ def update_mobs(respawn_time):
         if mob.hp <= 0:
             dead_mobs.append((type(mob), mob.starting_x, mob.starting_y, current_time)) # Save respawn position and dead time
             mobs.remove(mob) # Remove from alive mobs
+
+            # Drop coins
+            drop_pic = random.choice(mob.gold_pic_options)
+            dropped_coins.append(Coins(mob.x, mob.y, mob.gold_drop[drop_pic], drop_pic))
     
     # Respawning dead mobs after {respawn_time} seconds
     for mob_type, x, y, t in dead_mobs[:]:
@@ -73,11 +80,13 @@ while running:
 
     
 
-    # Drawing   
+    """  Drawing  """ 
     screen.fill(WHITE)
     player.draw(screen)
     for mob in mobs:
         mob.draw(screen)
+    for coin in dropped_coins:
+        coin.draw(screen)
 
     # Player healthbar
     draw_health_bar(screen, player.hp, player.max_hp)

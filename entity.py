@@ -12,7 +12,7 @@ import time
 all_damage_texts = []
 
 class Entity:
-    def __init__(self, x, y, hp=20, dmg=5, name="Goblin", lvl=1):
+    def __init__(self, x, y, hp=20, dmg=5, name="Goblin", lvl=1, gold_drop=[1,2,3], gold_pic_options=[0,1,2]):
         self.x = x
         self.y = y
         self.starting_x = x
@@ -23,6 +23,9 @@ class Entity:
         self.dmg = dmg
         self.name = name
         self.lvl = lvl
+        
+        self.gold_drop = gold_drop
+        self.gold_pic_options = gold_pic_options
 
         self.last_attack_time = 0
         self.attack_cooldown = 2
