@@ -3,7 +3,6 @@ from settings import FPS, WHITE, screen
 from player import Player
 from entity import Entity, all_damage_texts
 from goblin import Goblin
-from utils import SpawnEntity
 from ui import draw_health_bar
 
 pygame.init()
@@ -57,7 +56,7 @@ while running:
     # All mobs
     for mob in mobs:
         # Follow player
-        mob.move(player)
+        mob.move(player, mobs)
 
     # Deleting and respawning dead mobs
     update_mobs(5)

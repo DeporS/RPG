@@ -4,6 +4,7 @@ from settings import TILE_SIZE
 from assets import entity_img
 from damage_text import DamageText
 from name_text import NameText
+from utils import check_collision
 import math
 import time
 
@@ -24,13 +25,13 @@ class Entity:
         self.lvl = lvl
 
         self.last_attack_time = 0
-        self.attack_cooldown = 1
+        self.attack_cooldown = 2
 
         # Name
         self.name_text = NameText(self.x + TILE_SIZE // 2, self.y - 15, self.name, self.lvl)
 
     
-    def move(self, player):
+    def move(self, player, mobs):
         # position difference to player
         dx = player.x - self.x
         dy = player.y - self.y
@@ -43,16 +44,26 @@ class Entity:
             dx = (dx / length) * self.speed
             dy = (dy / length) * self.speed
 
-            # update position
-            self.x += dx
-            self.y += dy
-        else:
-            # if very close set to player x and y
-            self.x = player.x
-            self.y = player.y
+            # Potential new moves
+            new_x = self.x + dx
+            new_y = self.y + dy
+
+            # returns mob coliding with this one
+            colliding_mob = check_collision(self, player, mobs, new_x, new_y)
+
+            if not colliding_mob:
+                self.x = new_x
+                self.y = new_y
+            else:
+                # moving sideways or upside down to avoid collision
+                if check_collision(self, player, mobs, self.x + dx, self.y) is None:
+                    self.x += dx
+                elif check_collision(self, player, mobs, self.x, self.y + dy) is None:
+                    self.y += dy
+
 
         # Deal damage to player when within x radius
-        x = 10
+        x = TILE_SIZE + 5 # One tile plus 5, meaning max 9 mobs can hit player while surrounding him
         if abs(self.x - player.x) < x and abs(self.y - player.y) < x:
             # make player take dmg every 1 sec
             current_time = time.time()
