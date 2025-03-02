@@ -1,10 +1,11 @@
 import pygame
-from settings import HEALTHBAR_HEIGHT, HEALTHBAR_WIDTH, WHITE, HEALTHBARPOS_X
+from settings import HEALTHBAR_HEIGHT, HEALTHBAR_WIDTH, WHITE, HEALTHBARPOS_X, BLACK
 from assets import healthbar_bg, healthbar_fill, font
+
 
 def draw_health_bar(screen, health, max_health):
     """Draws healthbar"""
-    x =  HEALTHBARPOS_X # X position
+    x = HEALTHBARPOS_X  # X position
     y = screen.get_height() - HEALTHBAR_HEIGHT - 10  # down position
 
     health_ratio = health / max_health
@@ -18,9 +19,21 @@ def draw_health_bar(screen, health, max_health):
 
     # Render health values ex: "70/100"
     hp_text = f"{health} / {max_health}"
-    text_surface = font.render(hp_text, True, WHITE) 
+    text_surface = font.render(hp_text, True, WHITE)
     text_x = x + HEALTHBAR_WIDTH // 2 - text_surface.get_width() // 2  # Center
     text_y = y + HEALTHBAR_HEIGHT // 2 - text_surface.get_height() // 2
 
     # Draw HP values
     screen.blit(text_surface, (text_x, text_y))
+
+
+def draw_player_gold(screen, gold):
+    """Draws player gold value"""
+    x = 0
+    y = 0
+
+    gold_text = f"Gold: {gold}"
+    text_surface = font.render(gold_text, True, BLACK)
+
+    # Draw it
+    screen.blit(text_surface, (x, y))

@@ -6,6 +6,7 @@ from assets import player_img
 from name_text import NameText
 import math
 
+
 class Player:
     def __init__(self, x, y, hp=100, nickname="Newbie"):
         self.x = x
@@ -20,10 +21,12 @@ class Player:
         self.lvl = 1
         self.xp = 0
         self.max_xp = 10
+        self.gold = 0
         self.nickname = nickname
 
         # Nickname
-        self.name_text = NameText(self.x + TILE_SIZE // 2, self.y - 10, self.nickname, self.lvl)
+        self.name_text = NameText(
+            self.x + TILE_SIZE // 2, self.y - 10, self.nickname, self.lvl)
 
     def move(self, keys):
         diagonal_speed = self.speed / math.sqrt(2)  # diagonal run
@@ -48,16 +51,21 @@ class Player:
 
         # Update name position when player moves
         self.name_text.update_position(self.x + TILE_SIZE // 2, self.y - 10)
-    
+
     def shoot(self, target_x, target_y):
-        bullet = Bullet(self.x + TILE_SIZE // 4, self.y + TILE_SIZE // 4, target_x, target_y)
+        bullet = Bullet(self.x + TILE_SIZE // 4, self.y +
+                        TILE_SIZE // 4, target_x, target_y)
         self.bullets.append(bullet)
-    
+
     def take_dmg(self, dmg):
         self.hp -= dmg
         # Create damage text and add it to the list
-        damage_text = DamageText(HEALTHBARPOS_X + HEALTHBAR_WIDTH + 20, HEIGHT - 10 - HEALTHBAR_HEIGHT // 2, dmg)
+        damage_text = DamageText(
+            HEALTHBARPOS_X + HEALTHBAR_WIDTH + 20, HEIGHT - 10 - HEALTHBAR_HEIGHT // 2, dmg)
         self.damage_texts.append(damage_text)
+
+    def collect_coin(self, amount):
+        self.gold += amount
 
     def draw(self, screen):
         # Draw Player
@@ -75,6 +83,3 @@ class Player:
             text.draw(screen)
             if text.alpha == 0:  # Remove the text when its faded
                 self.damage_texts.remove(text)
-    
-    
-    

@@ -3,7 +3,7 @@ from settings import FPS, WHITE, screen
 from player import Player
 from entity import Entity, all_damage_texts
 from goblin import Goblin
-from ui import draw_health_bar
+from ui import draw_health_bar, draw_player_gold
 from coins import Coins
 import random
 
@@ -18,8 +18,9 @@ mobs = [
     Goblin(100, 500)
 ]
 
-dead_mobs = [] # List of dead mobs needed for respawning
-dropped_coins = [] # List of dropped coins from dead mobs
+dead_mobs = []  # List of dead mobs needed for respawning
+dropped_coins = []  # List of dropped coins from dead mobs
+
 
 def update_mobs(respawn_time):
     '''Function for updating mobs'''
@@ -29,13 +30,16 @@ def update_mobs(respawn_time):
     # Actions with dead mobs
     for mob in mobs[:]:
         if mob.hp <= 0:
-            dead_mobs.append((type(mob), mob.starting_x, mob.starting_y, current_time)) # Save respawn position and dead time
-            mobs.remove(mob) # Remove from alive mobs
+            # Save respawn position and dead time
+            dead_mobs.append((type(mob), mob.starting_x,
+                             mob.starting_y, current_time))
+            mobs.remove(mob)  # Remove from alive mobs
 
             # Drop coins
             drop_pic = random.choice(mob.gold_pic_options)
-            dropped_coins.append(Coins(mob.x, mob.y, mob.gold_drop[drop_pic], drop_pic))
-    
+            dropped_coins.append(
+                Coins(mob.x, mob.y, mob.gold_drop[drop_pic], drop_pic))
+
     # Respawning dead mobs after {respawn_time} seconds
     for mob_type, x, y, t in dead_mobs[:]:
         if current_time - t >= respawn_time * 1000:
@@ -67,7 +71,6 @@ while running:
 
     # Deleting and respawning dead mobs
     update_mobs(5)
-        
 
     # Bullets
     for bullet in player.bullets[:]:
@@ -78,18 +81,23 @@ while running:
                 if bullet in player.bullets:
                     player.bullets.remove(bullet)
 
-    
-
-    """  Drawing  """ 
+    """  Drawing  """
     screen.fill(WHITE)
     player.draw(screen)
     for mob in mobs:
         mob.draw(screen)
-    for coin in dropped_coins:
-        coin.draw(screen)
+    for coin in dropped_coins[:]:  # Iterate over copy to remove elements
+        if coin.collected:  # Remove already collected
+            dropped_coins.remove(coin)
+        else:
+            coin.check_collection(player)
+            coin.draw(screen)
 
     # Player healthbar
     draw_health_bar(screen, player.hp, player.max_hp)
+
+    # Player gold
+    draw_player_gold(screen, player.gold)
 
     # Mobs take damage texts
     for text in all_damage_texts[:]:
