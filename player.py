@@ -8,7 +8,8 @@ import math
 
 
 class Player:
-    def __init__(self, x, y, hp=100, nickname="Newbie"):
+    def __init__(self, x, y, hp=100, id=0, nickname="Newbie", lvl=1, xp=0, gold=0):
+        self.id = id
         self.x = x
         self.y = y
         self.speed = 4
@@ -18,10 +19,10 @@ class Player:
         self.hp = hp
         self.max_hp = hp
         self.damage_texts = []
-        self.lvl = 1
-        self.xp = 0
+        self.lvl = lvl
+        self.xp = xp
         self.max_xp = 10
-        self.gold = 0
+        self.gold = gold
         self.nickname = nickname
 
         # Nickname

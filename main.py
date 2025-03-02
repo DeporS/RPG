@@ -5,12 +5,39 @@ from entity import Entity, all_damage_texts
 from goblin import Goblin
 from ui import draw_health_bar, draw_player_gold
 from coins import Coins
+import database
 import random
+import time
 
 pygame.init()
 
 player = Player(400, 300)
 
+# Creates tables if dont exist
+database.create_tables()
+
+# Loads player if exist
+player_data = database.load_player()
+if player_data:
+    player = Player(
+        400, 300, 100, player_data[0], player_data[1], player_data[2], player_data[3], player_data[4])
+else:
+    database.save_player("DeporS", 1, 0, 0)
+    player_data = database.load_player()
+    player = Player(
+        400, 300, 100, player_data[0], player_data[1], player_data[2], player_data[3], player_data[4])
+
+# Database saving
+last_time = 0
+time_interval = 2 * 1000  # Time between database updates
+
+
+def update_database():
+    database.update_player(player.id, player.nickname,
+                           player.lvl, player.xp, player.gold)
+
+
+# Spawn mobs
 mobs = [
     Goblin(100, 100),
     Goblin(500, 100),
@@ -52,6 +79,11 @@ clock = pygame.time.Clock()
 
 while running:
     clock.tick(FPS)
+    current_time = pygame.time.get_ticks()
+
+    if current_time - last_time >= time_interval:
+        update_database()
+        last_time = current_time
 
     # Events a
     for event in pygame.event.get():
