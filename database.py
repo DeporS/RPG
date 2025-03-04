@@ -119,3 +119,72 @@ def get_all_items():
     conn.close()
 
     return items
+
+
+def give_player_item(player_name, item_name, quantity):
+    """Adds item to players inventory"""
+    conn = connect()
+    cursor = conn.cursor()
+
+    # Get players id
+    cursor.execute("SELECT id FROM players WHERE nickname = ?", (player_name,))
+    player = cursor.fetchone()
+    if not player:
+        print(f"Player '{player_name}' not found.")
+        conn.close()
+        return
+
+    player_id = player[0]
+
+    # Get items id
+    cursor.execute("SELECT id FROM items WHERE name = ?", (item_name,))
+    item = cursor.fetchone()
+    if not item:
+        print(f"Item '{item_name}' not found.")
+        conn.close()
+        return
+
+    item_id = item[0]
+
+    # Insert item
+    cursor.execute("""
+        INSERT INTO inventory (player_id, item_id, quantity) 
+        VALUES (?, ?, ?)
+    """, (player_id, item_id, quantity))
+    conn.commit()
+    conn.close()
+
+    print(f"Added {quantity}x {item_name} to {player_name}'s inventory.")
+
+
+def get_all_player_items(player_name):
+    """Returns player items"""
+    conn = connect()
+    cursor = conn.cursor()
+
+    # Get players id
+    cursor.execute("SELECT id FROM players WHERE nickname = ?", (player_name,))
+    player = cursor.fetchone()
+    if not player:
+        print(f"Player '{player_name}' not found.")
+        conn.close()
+        return
+
+    player_id = player[0]
+
+    # Get items from inventory
+    cursor.execute("""
+        SELECT items.name, inventory.quantity
+                   FROM inventory
+                   JOIN items on inventory.item_id = items.id
+                   WHERE inventory.player_id = ?               
+    """, (player_id,))
+
+    items = cursor.fetchall()
+    conn.close()
+
+    if not items:
+        print(f"{player_name} has no items in inventory.")
+        return []
+
+    return items
