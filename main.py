@@ -51,13 +51,13 @@ def main():
     # Loads player if exist
     player_data = database.load_player()
     if player_data:
-        player = Player(
-            400, 300, 100, player_data[0], player_data[1], player_data[2], player_data[3], player_data[4])
+        # player = Player(400, 300, 100, player_data[0], player_data[1], player_data[2], player_data[3], player_data[4])
+        player = Player(400, 300, 100, *player_data)
     else:
         database.save_player("DeporS", 1, 0, 0)
         player_data = database.load_player()
-        player = Player(
-            400, 300, 100, player_data[0], player_data[1], player_data[2], player_data[3], player_data[4])
+        # player = Player(400, 300, 100, player_data[0], player_data[1], player_data[2], player_data[3], player_data[4])
+        player = Player(400, 300, 100, *player_data)
 
     # Database saving
     last_time = 0

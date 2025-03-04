@@ -21,6 +21,28 @@ def create_tables():
                    )               
     """)
 
+    # All items table
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS items (
+                   id INTEGER PRIMARY KEY AUTOINCREMENT,
+                   name TEXT UNIQUE,
+                   description TEXT,
+                   type INTEGER DEFAULT 0 
+                   )
+    """)  # Type 0 - crafting items, 1 - weapons,
+
+    # Inventory table
+    cursor.execute("""
+        CREATE TABLE IF NOT EXISTS inventory (
+                   id INTEGER PRIMARY KEY AUTOINCREMENT,
+                   player_id INTEGER,
+                   item_id INTEGER,
+                   quantity INTEGER,
+                   FOREIGN KEY (player_id) REFERENCES player(id) ON DELETE CASCADE,
+                   FOREIGN KEY (item_id) REFERENCES items(id) ON DELETE CASCADE
+                   )
+    """)
+
     conn.commit()
     conn.close()
 
@@ -72,3 +94,28 @@ def load_player():
     player = cursor.fetchone()
     conn.close()
     return player
+
+
+def add_item(name, description, item_type):
+    """Adds item to the game"""
+    conn = connect()
+    cursor = conn.cursor()
+    cursor.execute("""
+        INSERT INTO items (name, description, type) 
+        VALUES (?, ?, ?)
+    """, (name, description, item_type))
+    conn.commit()
+    conn.close()
+
+
+def get_all_items():
+    """Returns all items in game"""
+    conn = connect()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM items")
+
+    items = cursor.fetchall()
+
+    conn.close()
+
+    return items
